@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accogliente Attico a Roma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Stile Globale */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #222;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Layout Principale */
+        .page-header {
+            padding: 20px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .page-header h1 {
+            font-size: 2.5em;
+            margin: 0 0 5px;
+        }
+        
+        .page-header p {
+            font-size: 1.2em;
+            color: #717171;
+            margin: 0;
+        }
+        
+        /* Galleria Fotografica */
+        .hero-gallery {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 8px;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 12px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .hero-gallery .main-img {
+            grid-column: 1 / 2;
+        }
+
+        .hero-gallery .small-img-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .hero-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hero-gallery img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* Pulsante "Mostra tutte le foto" */
+        .show-all-photos-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: #fff;
+            color: #222;
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.2s ease;
+        }
+
+        .show-all-photos-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Stili responsive per la galleria */
+        @media (max-width: 768px) {
+            .hero-gallery {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            .hero-gallery .main-img {
+                grid-column: auto;
+            }
+            .hero-gallery .small-img-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                height: auto;
+                max-height: 200px;
+                overflow-y: auto;
+            }
+            .show-all-photos-btn {
+                position: static;
+                margin-top: 15px;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* Contenuto Principale (Grid) */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 60px;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Sezioni Contenuto */
+        .section {
+            padding-bottom: 40px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .description-text, .house-rules-text, .cancellation-text {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .read-more-btn {
+            background: none;
+            border: none;
+            color: #222;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+        }
+        
+        /* Griglie e Liste */
+        .amenities-grid, .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .amenity-item, .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .amenity-icon, .info-icon {
+            font-size: 2em;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        li::before {
+            content: "•";
+            color: #222;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        /* Sidebar (Booking Widget) */
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+            padding: 24px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .price-box {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .price-box span {
+            font-size: 0.8em;
+            font-weight: normal;
+        }
+        
+        .reviews-box {
+            font-size: 0.9em;
+            color: #717171;
+            margin-bottom: 20px;
+        }
+
+        .booking-form .input-group {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .booking-form .input-item {
+            padding: 10px;
+            flex-grow: 1;
+            cursor: pointer;
+        }
+        
+        .booking-form .input-item:first-child {
+            border-right: 1px solid #ddd;
+        }
+        
+        .booking-form label {
+            display: block;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: #717171;
+            margin-bottom: 5px;
+        }
+
+        .booking-form input, .booking-form select {
+            border: none;
+            width: 100%;
+            font-size: 1em;
+            color: #222;
+            cursor: pointer;
+        }
+
+        .sidebar-button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            text-align: center;
+            background-color: #ff385c;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar-button:hover {
+            background-color: #d60026;
+        }
+        
+        .price-breakdown {
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        .price-breakdown p {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+        
+        .price-breakdown .total {
+            font-weight: bold;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        /* Modale per Foto a Schermo Intero */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: #ccc;
+        }
+
+        /* Stile per l'icona utente */
+        .user-icon {
+            font-size: 32px;
+            width: 48px;
+            height: 48px;
+            background-color: #eee;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Modale per la galleria completa */
+        .full-gallery-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .full-gallery-modal .modal-close {
+            color: #222;
+        }
+
+        .full-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 50px;
+        }
+
+        .full-gallery-grid img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .full-gallery-grid img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* Stili per il modulo di recensione */
+        .leave-review-section {
+            padding-top: 20px;
+        }
+
+        #review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #444;
+        }
+
+        #review-form input[type="text"], 
+        #review-form select, 
+        #review-form textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .submit-review-btn {
+            padding: 12px;
+            background-color: #ff385c;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-review-btn:hover {
+            background-color: #d60026;
+        }
+
+        .review-message {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="page-header">
+            <h1>Accogliente attico al 7° piano</h1>
+            <p>Il tuo angolo di relax a Roma</p>
+        </header>
+
+        <section class="hero-gallery">
+            <img src="images/fotosenzatitolo.jpg" alt="Foto principale dell'attico" class="main-img" id="main-image">
+            <div class="small-img-grid">
+                <img src="images/foto1.jpg" alt="Foto dell'attico 1" data-image="images/foto1.jpg">
+                <img src="images/foto2.jpg" alt="Foto dell'attico 2" data-image="images/foto2.jpg">
+                <img src="images/foto3.jpg" alt="Foto dell'attico 3" data-image="images/foto3.jpg">
+                <img src="images/foto4.jpg" alt="Foto dell'attico 4" data-image="images/foto4.jpg">
+            </div>
+            <button class="show-all-photos-btn" id="show-all-photos">
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style="display: block; fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 2; overflow: visible;"><g fill="none"><path d="M2 16h28M2 24h28M2 8h28"></path></g></svg>
+                Mostra tutte le foto
+            </button>
+        </section>
+
+        <div id="singleImageModal" class="modal">
+            <span class="modal-close" id="closeSingleImageModal">×</span>
+            <img class="modal-content" id="modalImage">
+        </div>
+
+        <div id="fullGalleryModal" class="full-gallery-modal">
+            <span class="modal-close" id="closeFullGalleryModal">×</span>
+            <div class="full-gallery-grid" id="full-gallery-grid">
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="left-column">
+                
+                <section class="section">
+                    <h2>Intero appartamento a tua disposizione</h2>
+                    <p class="description-text" id="property-description">
+                        Questo accogliente attico si trova al 7° piano di un moderno edificio, offrendo un ampio terrazzo panoramico. Situato in una zona tranquilla, è circondato da negozi, bar, ristoranti e pizzerie, a pochi minuti dai mezzi pubblici che ti porteranno in centro in 15 minuti. Lo spazio, di 45m², è stato progettato per offrire il massimo comfort e funzionalità, con una zona giorno luminosa e una cucina completamente attrezzata. Il terrazzo, arredato con un piccolo tavolo e sedie, è il luogo ideale per godersi la colazione o un aperitivo serale con una vista mozzafiato sulla città.
+                        <br><br>
+                        L'appartamento è perfetto per una coppia o una piccola famiglia. La camera da letto principale è dotata di un letto matrimoniale comodo e di un armadio spazioso. Il soggiorno include un divano-letto per un ospite aggiuntivo, se necessario, e una smart TV. Avrai a disposizione un bagno moderno con doccia, asciugacapelli e un set di cortesia completo.
+                    </p>
+                    <button class="read-more-btn" data-target="property-description">Mostra altro</button>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">Cosa è incluso</h2>
+                    <div class="amenities-grid">
+                        <div class="amenity-item"><span class="amenity-icon">📶</span><p>Wi-Fi ad alta velocità</p></div>
+                        <div class="amenity-item"><span class="amenity-icon">❄️</span><p>Aria Condizionata</p></div>
+                        <div class="amenity-item"><span class="amenity-icon">🍳</span><p>Cucina completa</p></div>
+                        <div class="amenity-item"><span class="amenity-icon">🧺</span><p>Lavatrice</p></div>
+                        <div class="amenity-item"><span class="amenity-icon">🅿️</span><p>Parcheggio gratuito</p></div>
+                        <div class="amenity-item"><span class="amenity-icon">☕</span><p>Caffè e Tè</p></div>
+                        <div class="amenity-item"><span class="amenity-icon">📺</span><p>Smart TV</p></div>
+                        <div class="amenity-item"><span class="amenity-icon">🚿</span><p>Asciugacapelli</p></div>
+                    </div>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">Le Recensioni</h2>
+                    <div class="reviews-grid">
+                        <div class="review-item">
+                            <div class="review-author">
+                                <span class="user-icon">👤</span>
+                            </div>
+                            <div class="review-content">
+                                <h3>Daniele</h3>
+                                <p>L’appartamento è un piccolo attico con un balconcino al settimo piano. È nuovo e tenuto benissimo. Katia ci ha fatto trovare tutto quello che serve: saponi, detersivi, acqua, caffè per tutti e tre i giorni di permanenza, the e tisane. Inoltre a pochi passi c’è l’autobus con il quale si raggiunge facilmente la metro di Laurentina.</p>
+                            </div>
+                        </div>
+                        <div class="review-item">
+                            <div class="review-author">
+                                <span class="user-icon">👤</span>
+                            </div>
+                            <div class="review-content">
+                                <h3>Sami, Turchia</h3>
+                                <p>Era molto tranquillo e silenzioso. I proprietari sono stati molto cordiali e disponibili. Aveva tutto ciò che una casa dovrebbe avere. La casa era molto pulita. 7 minuti a piedi dalla fermata dell'autobus e nelle vicinanze ci sono market .</p>
+                            </div>
+                        </div>
+                        <div class="review-item">
+                            <div class="review-author">
+                                <span class="user-icon">👤</span>
+                            </div>
+                            <div class="review-content">
+                                <h3>Maria</h3>
+                                <p>Casa accogliente e con il necessario a disposizione, la proprietaria super disponibile avendo avuto problemi di orario</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section leave-review-section">
+                    <h2 class="section-title">Lascia una recensione</h2>
+                    <form id="review-form">
+                        <div class="form-group">
+                            <label for="review-author">Il tuo nome</label>
+                            <input type="text" id="review-author" name="review-author" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="review-rating">Valutazione</label>
+                            <select id="review-rating" name="review-rating" required>
+                                <option value="5">⭐⭐⭐⭐⭐ (5 stelle)</option>
+                                <option value="4">⭐⭐⭐⭐ (4 stelle)</option>
+                                <option value="3">⭐⭐⭐ (3 stelle)</option>
+                                <option value="2">⭐⭐ (2 stelle)</option>
+                                <option value="1">⭐ (1 stella)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="review-text">La tua recensione</label>
+                            <textarea id="review-text" name="review-text" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-review-btn">Invia recensione</button>
+                        <p id="review-message" class="review-message"></p>
+                    </form>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">L'Host: Katia e Silvia</h2>
+                    <div class="host-profile">
+                        <img src="https://via.placeholder.com/100" alt="Foto di Katia e Silvia" style="border-radius: 50%;">
+                        <div>
+                            <h3>Gestito da Katia e Silvia</h3>
+                            <p style="color: #717171;">Superhost · Risponde solitamente in un'ora</p>
+                            <p style="margin-top: 10px;">Siamo due giovani imprenditori appassionati di viaggi e ospitalità. La nostra missione è farvi sentire come a casa.</p>
+                            <a href="https://wa.me/393294915103" class="sidebar-button" style="display: inline-block; width: auto; background-color: #25D366; font-size: 0.9em; padding: 10px 15px; margin-top: 15px;" target="_blank">Contatta l'host</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Regole della Casa</h2>
+                    <ul>
+                        <li>Check-in: dopo le 15:00</li>
+                        <li>Check-out: entro le 10:00</li>
+                        <li>Non sono ammessi animali domestici.</li>
+                        <li>È vietato fumare all'interno dell'appartamento. Consentito solo in terrazzo.</li>
+                    </ul>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">Il Quartiere</h2>
+                    <p class="description-text">L'appartamento si trova in una zona residenziale e tranquilla di Roma, ben collegata con i mezzi pubblici. A pochi passi troverai tutto ciò di cui hai bisogno: un supermercato, una farmacia, una panetteria e diverse opzioni per cenare, dalla tipica trattoria romana alla pizzeria. La stazione della metropolitana è a 5 minuti a piedi e ti porterà dritto al Colosseo in 15 minuti e a Piazza di Spagna in 20.</p>
+                    <div class="map-container" style="height: 400px; margin-top: 20px;">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.745582315858!2d12.4963658!3d41.8902102!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDUzJzI2LjAiTiAxMsKwMjknNDcuOCJF!5e0!3m2!1sit!2sit!4v1625488582297!5m2!1sit!2sit" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </section>
+                
+            </div>
+            
+            <div class="right-column">
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <div class="price-box">€90 <span>a notte</span></div>
+                        <div class="reviews-box">⭐⭐⭐⭐⭐ 28 recensioni</div>
+                    </div>
+                    <form class="booking-form">
+                        <div class="input-group">
+                            <div class="input-item">
+                                <label for="check-in">Check-in</label>
+                                <input type="date" id="check-in">
+                            </div>
+                            <div class="input-item">
+                                <label for="check-out">Check-out</label>
+                                <input type="date" id="check-out">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                             <div class="input-item" style="border: none;">
+                                <label for="guests">Ospiti</label>
+                                <select id="guests">
+                                    <option value="1">1 ospite</option>
+                                    <option value="2" selected>2 ospiti</option>
+                                    <option value="3">3 ospiti</option>
+                                </select>
+                             </div>
+                        </div>
+                    </form>
+                    <a href="https://wa.me/393294915103" class="sidebar-button" target="_blank">Controlla Disponibilità</a>
+                    <p style="text-align: center; font-size: 0.9em; color: #717171; margin-top: 10px;">Non ti verrà addebitato nulla per ora</p>
+
+                    <div class="price-breakdown">
+                        <p>€90 x 3 notti<span>€270</span></p>
+                        <p>Spese di pulizia<span>€30</span></p>
+                        <p>Costi del servizio Airbnb<span>€45</span></p>
+                        <p class="total">Totale<span>€345</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 40px 0; color: #717171;">
+        <p>© 2024 Accogliente Attico a Roma. Tutti i diritti riservati.</p>
+        <p>Dati di registrazione: IT058091C2BFBT4G7C</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainImage = document.getElementById('main-image');
+            const smallGalleryGrid = document.querySelector('.small-img-grid');
+            const singleImageModal = document.getElementById('singleImageModal');
+            const modalImage = document.getElementById('modalImage');
+            const closeSingleImageModal = document.getElementById('closeSingleImageModal');
+            
+            const showAllPhotosBtn = document.getElementById('show-all-photos');
+            const fullGalleryModal = document.getElementById('fullGalleryModal');
+            const fullGalleryGrid = document.getElementById('full-gallery-grid');
+            const closeFullGalleryModal = document.getElementById('closeFullGalleryModal');
+            
+            // Gestione del modulo delle recensioni
+            const reviewForm = document.getElementById('review-form');
+            const reviewMessage = document.getElementById('review-message');
+
+            reviewForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Impedisce l'invio del modulo
+                
+                // Simula l'invio dei dati
+                const author = document.getElementById('review-author').value;
+                const rating = document.getElementById('review-rating').value;
+                const text = document.getElementById('review-text').value;
+
+                console.log(`Recensione inviata:
+                Autore: ${author}
+                Valutazione: ${rating} stelle
+                Testo: ${text}`);
+
+                // Mostra un messaggio di conferma all'utente
+                reviewMessage.textContent = 'Grazie per la tua recensione! 🎉';
+                reviewMessage.style.color = '#25D366'; // Colore verde per il successo
+                reviewForm.reset(); // Azzera i campi del modulo
+                
+                // Rimuove il messaggio dopo 5 secondi
+                setTimeout(() => {
+                    reviewMessage.textContent = '';
+                }, 5000);
+            });
+
+            // Tutte le immagini della galleria, con percorsi corretti
+            const allImages = [
+                'images/fotosenzatitolo.jpg', 
+                'images/foto1.jpg',
+                'images/foto2.jpg',
+                'images/foto3.jpg',
+                'images/foto4.jpg',
+                'images/foto5.jpg',
+                'images/foto6.jpg',
+                'images/foto7.jpg',
+                'images/foto8.jpg',
+                'images/foto9.jpg',
+                'images/foto10.jpg',
+                'images/foto11.jpg',
+                'images/foto12.jpg',
+                'images/foto13.jpg',
+                'images/foto14.jpg',
+                'images/foto15.jpg',
+                'images/foto16.jpg',
+                'images/foto17.jpg',
+                'images/foto18.jpg',
+                'images/foto19.jpg'
+            ];
+
+            // Inizializza la foto principale con la prima immagine
+            mainImage.src = allImages[0];
+
+            // Carica le miniature nella griglia piccola (le prime 4 dopo la principale)
+            smallGalleryGrid.innerHTML = ''; 
+            for (let i = 1; i < Math.min(allImages.length, 5); i++) {
+                const img = document.createElement('img');
+                img.src = allImages[i];
+                img.alt = `Foto dell'attico ${i}`;
+                img.setAttribute('data-image', allImages[i]);
+                smallGalleryGrid.appendChild(img);
+            }
+
+            // Funzione "Mostra altro" per le descrizioni
+            document.querySelectorAll('.read-more-btn').forEach(button => {
+                const targetId = button.getAttribute('data-target');
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement.offsetHeight > 100) {
+                    targetElement.style.maxHeight = '100px';
+                    targetElement.style.overflow = 'hidden';
+                    button.style.display = 'block';
+                } else {
+                    button.style.display = 'none';
+                }
+
+                button.addEventListener('click', () => {
+                    if (targetElement.style.maxHeight === '100px') {
+                        targetElement.style.maxHeight = 'none';
+                        button.textContent = 'Mostra meno';
+                    } else {
+                        targetElement.style.maxHeight = '100px';
+                        button.textContent = 'Mostra altro';
+                    }
+                });
+            });
+
+            // Cambia l'immagine principale al click sulla miniatura
+            smallGalleryGrid.addEventListener('click', function(event) {
+                if (event.target.tagName === 'IMG') {
+                    const imagePath = event.target.getAttribute('data-image');
+                    if (imagePath) {
+                        mainImage.src = imagePath;
+                    }
+                }
+            });
+
+            // Apri la modale per singola immagine a schermo intero cliccando sull'immagine principale
+            mainImage.addEventListener('click', () => {
+                singleImageModal.style.display = 'flex';
+                modalImage.src = mainImage.src;
+            });
+            
+            // Chiudi la modale per singola immagine
+            closeSingleImageModal.addEventListener('click', () => {
+                singleImageModal.style.display = 'none';
+            });
+            singleImageModal.addEventListener('click', (e) => {
+                if (e.target === singleImageModal) {
+                    singleImageModal.style.display = 'none';
+                }
+            });
+
+            // Apri la modale della galleria completa al click sul pulsante "Mostra tutte le foto"
+            showAllPhotosBtn.addEventListener('click', () => {
+                fullGalleryGrid.innerHTML = '';
+                allImages.forEach(imageSrc => {
+                    const img = document.createElement('img');
+                    img.src = imageSrc;
+                    img.alt = 'Foto dell\'attico';
+                    img.setAttribute('data-image', imageSrc);
+                    fullGalleryGrid.appendChild(img);
+                });
+                fullGalleryModal.style.display = 'block';
+            });
+
+            // Chiudi la modale della galleria completa
+            closeFullGalleryModal.addEventListener('click', () => {
+                fullGalleryModal.style.display = 'none';
+            });
+            fullGalleryModal.addEventListener('click', (e) => {
+                if (e.target === fullGalleryModal) {
+                    fullGalleryModal.style.display = 'none';
+                }
+            });
+
+            // Opzionale: Apri la modale per singola immagine cliccando su una foto nella galleria completa
+            fullGalleryGrid.addEventListener('click', (event) => {
+                if (event.target.tagName === 'IMG') {
+                    singleImageModal.style.display = 'flex';
+                    modalImage.src = event.target.src;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
